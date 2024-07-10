@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Calibre Plugin</title>
+    <style>
+        .toggleContainer {
+            display: none;
+            padding-left: 1.5em;
+            padding-right: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div id="CalibreConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-select,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <div class="sectionTitleContainer flex align-items-center">
+                    <h2 class="sectionTitle">Calibre Cloumns</h2>
+                    <a is="emby-linkbutton" rel="noopener noreferrer" class="raised button-alt headerHelpButton emby-button" target="_blank" href="#linkTorepoforhelp"> Help </a>
+                </div>
+                <div id="PluginList">
+                    <form id="CalibreConfigForm">
+                        <!--<div class="selectContainer">
+                            <div class="selectContainer">-->
+                                <!--<select is="emby-select" onChange="OnLibChange(this);" id="libraryOptions" name="library" label="Configure Calibre for:"></select>-->
+                                <!--<select is="emby-select" id="libraryOptions" name="library" label="Configure Calibre for:"></select>
+                            </div>
+                        </div>-->
+
+                        <div id="configurationWrapper">
+                        </div>
+                        <div>
+                            <button is="emby-button" id="saveConfig" type="submit" class="raised button-submit block emby-button">
+                                <span>Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var PluginConfig = {
+                _id: '7808f7b3-1de5-41d3-be53-afbf28c99fff',
+                _index: 0,
+                _config: [],
+
+                configurationWrapper: document.querySelector("#configurationWrapper"),
+                template: document.querySelector("#tmplt-lib").content.firstElementChild,
+
+                btnSave: document.querySelector("#saveConfig"),
+                //libOptions: document.querySelector("#libraryOptions"),
+
+                init: function () {
+                    ApiClient.getPluginConfiguration(PluginConfig._id).then((config) => {
+                        this._config = config.LibConfigs;
+                        ApiClient.getVirtualFolders().then((virtualFolders) => {
+                            virtualFolders.forEach((lib) => {
+                                if (lib.CollectionType == "books") {
+                                    lib.Locations.forEach((loc) => {
+                                        let foundlib = this.getLib(config.LibConfigs, loc);
+                                        //console.log("Lib Found");
+                                        //console.log(foundlib);
+                                        if (foundlib == null) {
+                                            let name = loc.split("\\").pop();
+
+                                            const libConfig = {
+                                                Name: name,
+                                                Location: loc,
+                                                Genres: 'default',
+                                                Tags: 'default',
+                                                CommunityRating: 'default',
+                                                ParentalRating: '',
+                                                CustomRating: ''
+                                            }
+                                            this._config.push(libConfig);
+                                        }
+                                    });
+                                }
+                            });
+                            this.addConfigs();
+                        });
+                    });
+                },
+                saveConfig: function () {
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(this._id).then(function (config) {
+                        config.LibConfigs.length = 0;
+                        const configs = document.querySelectorAll("[data-id=lib-config]");
+                        for (let i = 0; i < configs.length; i++) {
+                            const libConfig = {
+                                Name: configs[i].querySelector("[data-id=lib-name]").innerText,
+                                Location: configs[i].querySelector("[data-id=location]").innerText,
+                                Genres: configs[i].querySelector("[data-id=genres]").value,
+                                Tags: configs[i].querySelector("[data-id=tags]").value,
+                                CommunityRating: configs[i].querySelector("[data-id=community]").value,
+                                ParentalRating: configs[i].querySelector("[data-id=parental]").value,
+                                CustomRating: configs[i].querySelector("[data-id=custom]").value
+                            }
+                            config.LibConfigs.push(libConfig);
+                        }
+
+                        ApiClient.updatePluginConfiguration(PluginConfig._id, config).then(function (result) {
+                            Dashboard.processPluginConfigurationUpdateResult(result);
+                        });
+                    });
+                },
+                getLib: function (libs, loc) {
+                    if (libs.length < 1) return null;
+                    for (let i = 0; i < libs.length; i++) {
+                        if (libs[i].Location == loc) {
+                            return libs[i];
+                        }
+                    }
+                    return null;
+                },
+                addConfigs: function () {
+                    this._config.forEach((config) => {
+                        this.addLibrary(config);
+                    })
+                },
+
+                addLibrary: function (config) {
+                    const template = this.template.cloneNode(true);
+
+                    template.querySelector("[data-id=lib-name]").innerText = config.Name;
+                    template.querySelector("[data-id=location]").innerText = config.Location;
+                    template.querySelector("[data-id=genres]").value = config.Genres;
+                    template.querySelector("[data-id=tags]").value = config.Tags;
+                    template.querySelector("[data-id=community]").value = config.CommunityRating;
+                    template.querySelector("[data-id=parental]").value = config.ParentalRating;
+                    template.querySelector("[data-id=custom]").value = config.CustomRating;
+
+                    this.configurationWrapper.appendChild(template);
+                },
+            };
+
+            document.querySelector('#CalibreConfigPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                PluginConfig.init();
+                Dashboard.hideLoadingMsg();
+            });
+
+            PluginConfig.btnSave.addEventListener('click', function (e) {
+                e.preventDefault();
+                PluginConfig.saveConfig();
+
+                return false;
+            });
+
+            function toggleDiv(el) {
+                let toggle = el.parentElement.parentElement.querySelector('.toggleContainer');
+                if (toggle.style.display === "none") {
+                    toggle.style.display = "block";
+                    el.parentElement.querySelector("span").className = 'material-icons keyboard_arrow_up';
+                } else {
+                    toggle.style.display = "none";
+                    el.parentElement.querySelector("span").className = 'material-icons keyboard_arrow_down';
+                }
+            }
+        </script>
+        <template id="tmplt-lib">
+            <div data-id="lib-config">
+                <div class="flex align-items-center" style="column-gap: 1em;">
+                    <div class="listItemBody two-line" onclick="toggleDiv(this);">
+                        <h3 data-id="lib-name" class="listItemBodyText">Jellyfin Books</h3>
+                        <div data-id="location" class="listItemBodyText secondary">Jellyfin Books</div>
+                    </div>
+                    <button is="paper-icon-button-light" class="paper-icon-button-light btnToggle" type="button" id="dropdown" title="toggleDropdow">
+                        <span class="material-icons keyboard_arrow_down" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="toggleContainer" style="display:none;">
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="genres" name="genres" type="text" label="Genres:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="tags" name="tags" type="text" label="Tags:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="community" name="community" type="text" label="Community Rating:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="parental" name="parental" type="text" label="Parental Rating:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="custom" name="custom" type="text" label="Custom Rating:" />
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</body>
+</html>
