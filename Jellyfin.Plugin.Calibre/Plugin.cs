@@ -32,7 +32,7 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
     public override Guid Id => new Guid("7808f7b3-1de5-41d3-be53-afbf28c99fff");
 
     /// <inheritdoc />
-    public override string Description => "Get Calibre metadata from opf";
+    public override string Description => "Get Calibre metadata from metadata.opf";
 
     /// <summary>
     /// Gets the current plugin instance.
