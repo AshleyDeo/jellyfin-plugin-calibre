@@ -28,5 +28,8 @@
 3. Restart Jellyfin.
 
 ### From Repository
-1. Add #linkNotAddedYet# to Plugin Repository
+1. Add [link](https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/main/manifest.json) to Plugin Repository
+```
+https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/main/manifest.json
+```
 2. Install the "Calibre" plugin from the catalog

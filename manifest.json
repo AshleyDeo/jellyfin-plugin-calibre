@@ -1,1 +1,19 @@
-[]
+[
+    {
+        "guid": "7808f7b3-1de5-41d3-be53-afbf28c99fff",
+        "name": "Calibre",
+        "description": "Calibre metadata provider\n",
+        "overview": "Get Calibre metadata from metadata.opf",
+        "owner": "ashleydeo",
+        "category": "Channels",
+        "versions": [
+            {
+                "version": "1.0.0.0",
+                "changelog": "- Initial release",
+                "targetAbi": "10.9.0.0",
+                "sourceUrl": "https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases/download/v1/calibre_1.0.0.0.zip",
+                "timestamp": "2024-07-10T01:09:23Z"
+            }
+		]
+	}
+]
