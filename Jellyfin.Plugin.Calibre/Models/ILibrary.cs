@@ -32,6 +32,30 @@ namespace Jellyfin.Plugin.Calibre.Models
         public string Tags { get; set; } = "default";
 
         /// <summary>
+        /// Gets or sets Calibre column with authors.
+        /// </summary>
+        [Required]
+        public string Authors { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with illustrators.
+        /// </summary>
+        [Required]
+        public string Illustrators { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with inkers.
+        /// </summary>
+        [Required]
+        public string Inkers { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with translators.
+        /// </summary>
+        [Required]
+        public string Translators { get; set; } = "default";
+
+        /// <summary>
         /// Gets or sets Community Rating Calibre column.
         /// Only last value will be kept.
         /// </summary>

@@ -57,6 +57,7 @@
                         ApiClient.getVirtualFolders().then((virtualFolders) => {
                             virtualFolders.forEach((lib) => {
                                 if (lib.CollectionType == "books") {
+                                    //Get book Libraries
                                     lib.Locations.forEach((loc) => {
                                         let foundlib = this.getLib(config.LibConfigs, loc);
                                         //console.log("Lib Found");
@@ -69,6 +70,10 @@
                                                 Location: loc,
                                                 Genres: 'default',
                                                 Tags: 'default',
+                                                Authors: 'default',
+                                                Illustrators: 'default',
+                                                Inkers: '',
+                                                Translators: 'default',
                                                 CommunityRating: 'default',
                                                 ParentalRating: '',
                                                 CustomRating: ''
@@ -78,6 +83,7 @@
                                     });
                                 }
                             });
+                            // load html
                             this.addConfigs();
                         });
                     });
@@ -93,6 +99,10 @@
                                 Location: configs[i].querySelector("[data-id=location]").innerText,
                                 Genres: configs[i].querySelector("[data-id=genres]").value,
                                 Tags: configs[i].querySelector("[data-id=tags]").value,
+                                Authors: configs[i].querySelector("[data-id=author]").value,
+                                Illustrators: configs[i].querySelector("[data-id=illus]").value,
+                                Inkers: configs[i].querySelector("[data-id=inker]").value,
+                                Translators: configs[i].querySelector("[data-id=transl]").value,
                                 CommunityRating: configs[i].querySelector("[data-id=community]").value,
                                 ParentalRating: configs[i].querySelector("[data-id=parental]").value,
                                 CustomRating: configs[i].querySelector("[data-id=custom]").value
@@ -127,6 +137,10 @@
                     template.querySelector("[data-id=location]").innerText = config.Location;
                     template.querySelector("[data-id=genres]").value = config.Genres;
                     template.querySelector("[data-id=tags]").value = config.Tags;
+                    template.querySelector("[data-id=author]").value = config.Authors;
+                    template.querySelector("[data-id=illus]").value = config.Illustrators;
+                    template.querySelector("[data-id=inker]").value = config.Inkers;
+                    template.querySelector("[data-id=transl]").value = config.Translators;
                     template.querySelector("[data-id=community]").value = config.CommunityRating;
                     template.querySelector("[data-id=parental]").value = config.ParentalRating;
                     template.querySelector("[data-id=custom]").value = config.CustomRating;
@@ -176,6 +190,18 @@
                     </div>
                     <div class="inputContainer">
                         <input is="emby-input" data-id="tags" name="tags" type="text" label="Tags:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="author" name="author" type="text" label="Authors:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="illus" name="illus" type="text" label="Illustrator:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="inker" name="inker" type="text" label="Inkers:" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" data-id="transl" name="transl" type="text" label="Translators:" />
                     </div>
                     <div class="inputContainer">
                         <input is="emby-input" data-id="community" name="community" type="text" label="Community Rating:" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.IO;
@@ -113,24 +114,160 @@ namespace Jellyfin.Plugin.Calibre.Providers
 
             var book = CreateBookFromOpf();
             var bookResult = new MetadataResult<Book> { Item = book, HasMetadata = true };
-            FindAuthors(bookResult);
+
+            var creators = _document.SelectNodes("//dc:creator", _namespaceManager);
+            var authorConfig = _library.Authors.Split(';');
+            var illusConfig = _library.Illustrators.Split(';');
+            var inkerConfig = _library.Inkers.Split(';');
+            var translatorConfig = _library.Translators.Split(';');
+            if (creators != null && creators.Count > 0)
+            {
+                foreach (XmlElement creator in creators)
+                {
+                    var creatorName = creator.InnerText;
+                    string? role = creator.GetAttribute("opf:role");
+                    PersonKind? type = null;
+                    switch (role)
+                    {
+                        case "arr":
+                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                                type = PersonKind.Arranger;
+                            }
+
+                            break;
+                        case "art":
+                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                                type = PersonKind.Artist;
+                            }
+
+                            break;
+                        case "aut":
+                        case "aqt":
+                        case "aft":
+                        case "aui":
+                        default:
+                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                                type = PersonKind.Author;
+                            }
+
+                            break;
+                        case "edt":
+                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                            type = PersonKind.Editor;
+                            }
+
+                            break;
+                        case "ill":
+                            if (illusConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                                type = PersonKind.Illustrator;
+                            }
+
+                            break;
+                        case "lyr":
+                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                                type = PersonKind.Lyricist;
+                            }
+
+                            break;
+                        case "mus":
+                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                                type = PersonKind.AlbumArtist;
+                            }
+
+                            break;
+                        case "oth":
+                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                            type = PersonKind.Unknown;
+                             }
+
+                            break;
+                        case "trl":
+                            if (translatorConfig.Length > 0 && authorConfig[0] == "default")
+                            {
+                                type = PersonKind.Translator;
+                            }
+
+                            break;
+                    }
+
+                    if (type != null)
+                    {
+                        var person = new PersonInfo { Name = creatorName, Type = (PersonKind)type };
+                        bookResult.AddPerson(person);
+                    }
+                }
+            }
+
+            foreach (var column in authorConfig)
+            {
+                if (column == "defualt")
+                {
+                    continue;
+                }
+                else if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Author);
+                }
+            }
+
+            foreach (var column in illusConfig)
+            {
+                if (column == "defualt")
+                {
+                    continue;
+                }
+                else if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Illustrator);
+                }
+            }
+
+            foreach (var column in inkerConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Inker);
+                }
+            }
+
+            foreach (var column in translatorConfig)
+            {
+                if (column == "defualt")
+                {
+                    continue;
+                }
+                else if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Translator);
+                }
+            }
 
             ReadStringInto("//dc:language", language => bookResult.ResultLanguage = language);
 
             return bookResult;
         }
 
-        private void FindAuthors(MetadataResult<Book> book)
+        private void AddCustomPerson(string colName, MetadataResult<Book> book, PersonKind type)
         {
-            var resultElement = _document.SelectNodes("//dc:creator[@opf:role='aut']", _namespaceManager);
-            if (resultElement != null && resultElement.Count > 0)
+            var names = FindUserMetadata(colName);
+            if (names != null && names.Count > 0)
             {
-                foreach (XmlElement author in resultElement)
+                foreach (var name in names)
                 {
-                    var authorName = author.InnerText;
-                    // _logger.LogInformation("New Author found: {AuthorName}", authorName);
-                    var person = new PersonInfo { Name = authorName, Type = PersonKind.Author };
-                    book.AddPerson(person);
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        var person = new PersonInfo { Name = name, Type = type };
+                        _logger.LogDebug("Added {Name} as {Type}", name, type);
+                        book.AddPerson(person);
+                    }
                 }
             }
         }
@@ -148,7 +285,6 @@ namespace Jellyfin.Plugin.Calibre.Providers
             ReadStringInto("//dc:identifier[@opf:scheme='AMAZON']", amazon => book.SetProviderId("Amazon", amazon));
             ReadStringInto("//dc:identifier[@opf:scheme='GOOGLE']", google => book.SetProviderId("GoogleBooks", google));
 
-            XmlNodeList? genresNodes = FindTags();
             ReadStringInto("//dc:date", date =>
             {
                 if (DateTime.TryParse(date, out var dateValue))
@@ -158,6 +294,7 @@ namespace Jellyfin.Plugin.Calibre.Providers
                 }
             });
 
+            XmlNodeList? genresNodes = FindTags();
             var genresConfig = _library.Genres.Split(';');
             foreach (var column in genresConfig)
             {
@@ -218,6 +355,7 @@ namespace Jellyfin.Plugin.Calibre.Providers
             }
 
             var seriesNameNode = _document.SelectSingleNode("//opf:meta[@name='calibre:series']", _namespaceManager);
+            var seriesIndexNode = _document.SelectSingleNode("//opf:meta[@name='calibre:series_index']", _namespaceManager);
             if (!string.IsNullOrEmpty(seriesNameNode?.Attributes?["content"]?.Value))
             {
                 try
