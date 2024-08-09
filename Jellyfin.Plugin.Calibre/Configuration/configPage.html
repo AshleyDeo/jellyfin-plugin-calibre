@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Calibre Plugin</title>
     <style>
-        .toggleContainer {
+        .toggleContainer-1 {
             display: none;
             padding-left: 1.5em;
             padding-right: 1em;
@@ -70,10 +70,18 @@
                                                 Location: loc,
                                                 Genres: 'default',
                                                 Tags: 'default',
+                                                Artists: '',
                                                 Authors: 'default',
+                                                CoverArtists: '',
+                                                Colorists: '',
+                                                Editors: '',
                                                 Illustrators: 'default',
                                                 Inkers: '',
+                                                Letterers: '',
+                                                OtherPeople: 'default',
+                                                Pencillers: '',
                                                 Translators: 'default',
+                                                Writers: '',
                                                 CommunityRating: 'default',
                                                 ParentalRating: '',
                                                 CustomRating: ''
@@ -99,9 +107,17 @@
                                 Location: configs[i].querySelector("[data-id=location]").innerText,
                                 Genres: configs[i].querySelector("[data-id=genres]").value,
                                 Tags: configs[i].querySelector("[data-id=tags]").value,
+                                Artists: configs[i].querySelector("[data-id=artist]").value,
                                 Authors: configs[i].querySelector("[data-id=author]").value,
+                                Colorists: configs[i].querySelector("[data-id=colorist]").value,
+                                CoverArtists: configs[i].querySelector("[data-id=coverartist]").value,
+                                Editors: configs[i].querySelector("[data-id=editor]").value,
                                 Illustrators: configs[i].querySelector("[data-id=illus]").value,
                                 Inkers: configs[i].querySelector("[data-id=inker]").value,
+                                Letterers: configs[i].querySelector("[data-id=letterer]").value,
+                                Pencillers: configs[i].querySelector("[data-id=penciller]").value,
+                                OtherPeople: configs[i].querySelector("[data-id=otherppl]").value,
+                                Writer: configs[i].querySelector("[data-id=writer]").value,
                                 Translators: configs[i].querySelector("[data-id=transl]").value,
                                 CommunityRating: configs[i].querySelector("[data-id=community]").value,
                                 ParentalRating: configs[i].querySelector("[data-id=parental]").value,
@@ -137,9 +153,17 @@
                     template.querySelector("[data-id=location]").innerText = config.Location;
                     template.querySelector("[data-id=genres]").value = config.Genres;
                     template.querySelector("[data-id=tags]").value = config.Tags;
+                    template.querySelector("[data-id=artist]").value = config.Artists;
                     template.querySelector("[data-id=author]").value = config.Authors;
+                    template.querySelector("[data-id=colorist]").value = config.Colorists;
+                    template.querySelector("[data-id=coverartist]").value = config.CoverArtists;
+                    template.querySelector("[data-id=editor]").value = config.Editors;
                     template.querySelector("[data-id=illus]").value = config.Illustrators;
                     template.querySelector("[data-id=inker]").value = config.Inkers;
+                    template.querySelector("[data-id=letterer]").value = config.Letterers;
+                    template.querySelector("[data-id=penciller]").value = config.Pencillers;
+                    template.querySelector("[data-id=writer]").value = config.Writers;
+                    template.querySelector("[data-id=otherppl]").value = config.OtherPeople;
                     template.querySelector("[data-id=transl]").value = config.Translators;
                     template.querySelector("[data-id=community]").value = config.CommunityRating;
                     template.querySelector("[data-id=parental]").value = config.ParentalRating;
@@ -162,55 +186,110 @@
                 return false;
             });
 
-            function toggleDiv(el) {
-                let toggle = el.parentElement.parentElement.querySelector('.toggleContainer');
+            function toggleDiv1(el) {
+                let toggle = el.nextElementSibling;
                 if (toggle.style.display === "none") {
                     toggle.style.display = "block";
-                    el.parentElement.querySelector("span").className = 'material-icons keyboard_arrow_up';
+                    el.querySelector("span").className = 'material-icons keyboard_arrow_up';
                 } else {
                     toggle.style.display = "none";
-                    el.parentElement.querySelector("span").className = 'material-icons keyboard_arrow_down';
+                    el.querySelector("span").className = 'material-icons keyboard_arrow_down';
+                }
+            }
+
+            function toggleDiv2(el) {
+                let toggle = el.nextElementSibling;
+                if (toggle.style.display === "none") {
+                    toggle.style.display = "block";
+                    el.querySelector("span").className = 'material-icons remove_circle';
+                } else {
+                    toggle.style.display = "none";
+                    el.querySelector("span").className = 'material-icons add_circle';
                 }
             }
         </script>
         <template id="tmplt-lib">
             <div data-id="lib-config">
-                <div class="flex align-items-center" style="column-gap: 1em;">
-                    <div class="listItemBody two-line" onclick="toggleDiv(this);">
-                        <h3 data-id="lib-name" class="listItemBodyText">Jellyfin Books</h3>
-                        <div data-id="location" class="listItemBodyText secondary">Jellyfin Books</div>
-                    </div>
+                <div class="flex align-items-center" onclick="toggleDiv1(this);">
                     <button is="paper-icon-button-light" class="paper-icon-button-light btnToggle" type="button" id="dropdown" title="toggleDropdow">
                         <span class="material-icons keyboard_arrow_down" aria-hidden="true"></span>
                     </button>
+                    <div class="listItemBody two-line">
+                        <h3 data-id="lib-name" class="listItemBodyText">Jellyfin Books</h3>
+                        <div data-id="location" class="listItemBodyText secondary">Jellyfin Books</div>
+                    </div>
                 </div>
-                <div class="toggleContainer" style="display:none;">
+                <div class="toggleContainer-1" style="display: none; padding-left: 2rem;">
                     <div class="inputContainer">
                         <input is="emby-input" data-id="genres" name="genres" type="text" label="Genres:" />
                     </div>
                     <div class="inputContainer">
                         <input is="emby-input" data-id="tags" name="tags" type="text" label="Tags:" />
                     </div>
-                    <div class="inputContainer">
-                        <input is="emby-input" data-id="author" name="author" type="text" label="Authors:" />
+                    <div class="flex align-items-center" onclick="toggleDiv2(this);">
+                        <button is="paper-icon-button-light" class="paper-icon-button-light btnToggle" type="button" id="dropdown" title="toggleDropdow">
+                            <span class="material-icons add_circle" aria-hidden="true"></span>
+                        </button>
+                        <div class="listItemBody" style="padding: 0;">
+                            <h4>People</h4>
+                        </div>
                     </div>
-                    <div class="inputContainer">
-                        <input is="emby-input" data-id="illus" name="illus" type="text" label="Illustrator:" />
+                    <div class="toggleContainer-2" style="display: none; padding-left: 1rem;">
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="artist" name="artist" type="text" label="Artists:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="author" name="author" type="text" label="Authors:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="colorist" name="colorist" type="text" label="Colorists:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="coverartist" name="coverartist" type="text" label="CoverArtists:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="editor" name="editor" type="text" label="Editors:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="illus" name="illus" type="text" label="Illustrators:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="inker" name="inker" type="text" label="Inkers:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="letterer" name="letterer" type="text" label="Letterers:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="penciller" name="penciller" type="text" label="Pencillers:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="otherppl" name="otherppl" type="text" label="Other People:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="transl" name="transl" type="text" label="Translators:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="writer" name="writer" type="text" label="Writers:" />
+                        </div>
                     </div>
-                    <div class="inputContainer">
-                        <input is="emby-input" data-id="inker" name="inker" type="text" label="Inkers:" />
+                    <div class="flex align-items-center" onclick="toggleDiv2(this);">
+                        <button is="paper-icon-button-light" class="paper-icon-button-light btnToggle" type="button" id="dropdown" title="toggleDropdow">
+                            <span class="material-icons add_circle" aria-hidden="true"></span>
+                        </button>
+                        <div class="listItemBody" style="padding: 0;">
+                            <h4>Ratings</h4>
+                        </div>
                     </div>
-                    <div class="inputContainer">
-                        <input is="emby-input" data-id="transl" name="transl" type="text" label="Translators:" />
-                    </div>
-                    <div class="inputContainer">
-                        <input is="emby-input" data-id="community" name="community" type="text" label="Community Rating:" />
-                    </div>
-                    <div class="inputContainer">
-                        <input is="emby-input" data-id="parental" name="parental" type="text" label="Parental Rating:" />
-                    </div>
-                    <div class="inputContainer">
-                        <input is="emby-input" data-id="custom" name="custom" type="text" label="Custom Rating:" />
+                    <div class="toggleContainer-2" style="display: none; padding-left: 2rem;">
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="community" name="community" type="text" label="Community Rating:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="parental" name="parental" type="text" label="Parental Rating:" />
+                        </div>
+                        <div class="inputContainer">
+                            <input is="emby-input" data-id="custom" name="custom" type="text" label="Custom Rating:" />
+                        </div>
                     </div>
                 </div>
             </div>

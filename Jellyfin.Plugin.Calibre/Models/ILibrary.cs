@@ -35,7 +35,31 @@ namespace Jellyfin.Plugin.Calibre.Models
         /// Gets or sets Calibre column with authors.
         /// </summary>
         [Required]
+        public string Artists { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with authors.
+        /// </summary>
+        [Required]
         public string Authors { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with authors.
+        /// </summary>
+        [Required]
+        public string Colorists { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with authors.
+        /// </summary>
+        [Required]
+        public string CoverArtists { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with editors.
+        /// </summary>
+        [Required]
+        public string Editors { get; set; } = "default";
 
         /// <summary>
         /// Gets or sets Calibre column with illustrators.
@@ -53,7 +77,31 @@ namespace Jellyfin.Plugin.Calibre.Models
         /// Gets or sets Calibre column with translators.
         /// </summary>
         [Required]
+        public string Letterers { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with translators.
+        /// </summary>
+        [Required]
+        public string Pencillers { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with translators.
+        /// </summary>
+        [Required]
+        public string Writers { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with translators.
+        /// </summary>
+        [Required]
         public string Translators { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets Calibre column with unknowns.
+        /// </summary>
+        [Required]
+        public string OtherPeople { get; set; } = "default";
 
         /// <summary>
         /// Gets or sets Community Rating Calibre column.

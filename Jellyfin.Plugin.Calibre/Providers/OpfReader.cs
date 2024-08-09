@@ -117,8 +117,9 @@ namespace Jellyfin.Plugin.Calibre.Providers
 
             var creators = _document.SelectNodes("//dc:creator", _namespaceManager);
             var authorConfig = _library.Authors.Split(';');
+            var editorsConfig = _library.Editors.Split(';');
             var illusConfig = _library.Illustrators.Split(';');
-            var inkerConfig = _library.Inkers.Split(';');
+            var otherConfig = _library.OtherPeople.Split(';');
             var translatorConfig = _library.Translators.Split(';');
             if (creators != null && creators.Count > 0)
             {
@@ -155,14 +156,14 @@ namespace Jellyfin.Plugin.Calibre.Providers
 
                             break;
                         case "edt":
-                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            if (editorsConfig.Length > 0 && editorsConfig[0] == "default")
                             {
                             type = PersonKind.Editor;
                             }
 
                             break;
                         case "ill":
-                            if (illusConfig.Length > 0 && authorConfig[0] == "default")
+                            if (illusConfig.Length > 0 && illusConfig[0] == "default")
                             {
                                 type = PersonKind.Illustrator;
                             }
@@ -183,14 +184,14 @@ namespace Jellyfin.Plugin.Calibre.Providers
 
                             break;
                         case "oth":
-                            if (authorConfig.Length > 0 && authorConfig[0] == "default")
+                            if (otherConfig.Length > 0 && otherConfig[0] == "default")
                             {
-                            type = PersonKind.Unknown;
-                             }
+                                type = PersonKind.Unknown;
+                            }
 
                             break;
                         case "trl":
-                            if (translatorConfig.Length > 0 && authorConfig[0] == "default")
+                            if (translatorConfig.Length > 0 && translatorConfig[0] == "default")
                             {
                                 type = PersonKind.Translator;
                             }
@@ -218,6 +219,18 @@ namespace Jellyfin.Plugin.Calibre.Providers
                 }
             }
 
+            foreach (var column in editorsConfig)
+            {
+                if (column == "defualt")
+                {
+                    continue;
+                }
+                else if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Editor);
+                }
+            }
+
             foreach (var column in illusConfig)
             {
                 if (column == "defualt")
@@ -230,11 +243,15 @@ namespace Jellyfin.Plugin.Calibre.Providers
                 }
             }
 
-            foreach (var column in inkerConfig)
+            foreach (var column in otherConfig)
             {
-                if (!string.IsNullOrEmpty(column))
+                if (column == "defualt")
                 {
-                    AddCustomPerson(column, bookResult, PersonKind.Inker);
+                    continue;
+                }
+                else if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Translator);
                 }
             }
 
@@ -247,6 +264,69 @@ namespace Jellyfin.Plugin.Calibre.Providers
                 else if (!string.IsNullOrEmpty(column))
                 {
                     AddCustomPerson(column, bookResult, PersonKind.Translator);
+                }
+            }
+
+            var artistConfig = _library.Artists.Split(';');
+            foreach (var column in artistConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Artist);
+                }
+            }
+
+            var coverartConfig = _library.CoverArtists.Split(';');
+            foreach (var column in coverartConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.CoverArtist);
+                }
+            }
+
+            var coloristConfig = _library.Colorists.Split(';');
+            foreach (var column in coloristConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Colorist);
+                }
+            }
+
+            var inkerConfig = _library.Inkers.Split(';');
+            foreach (var column in inkerConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Inker);
+                }
+            }
+
+            var lettererConfig = _library.Letterers.Split(';');
+            foreach (var column in lettererConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Letterer);
+                }
+            }
+
+            var pencillerConfig = _library.Pencillers.Split(';');
+            foreach (var column in pencillerConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Penciller);
+                }
+            }
+
+            var writerConfig = _library.Writers.Split(';');
+            foreach (var column in writerConfig)
+            {
+                if (!string.IsNullOrEmpty(column))
+                {
+                    AddCustomPerson(column, bookResult, PersonKind.Letterer);
                 }
             }
 
@@ -279,11 +359,28 @@ namespace Jellyfin.Plugin.Calibre.Providers
             book.Name = FindMainTitle();
             book.ForcedSortName = FindSortTitle();
 
+            var seriesNameNode = _document.SelectSingleNode("//opf:meta[@name='calibre:series']", _namespaceManager);
+            var seriesIndexNode = _document.SelectSingleNode("//opf:meta[@name='calibre:series_index']", _namespaceManager);
+            if (!string.IsNullOrEmpty(seriesNameNode?.Attributes?["content"]?.Value))
+            {
+                try
+                {
+                    book.SeriesName = seriesNameNode.Attributes["content"]?.Value;
+                }
+                catch (Exception)
+                {
+                    _logger.LogError("Error parsing Calibre series name");
+                }
+            }
+
             ReadStringInto("//dc:description", summary => book.Overview = summary);
             ReadStringInto("//dc:publisher", publisher => book.AddStudio(publisher));
             ReadStringInto("//dc:identifier[@opf:scheme='ISBN']", isbn => book.SetProviderId("ISBN", isbn));
             ReadStringInto("//dc:identifier[@opf:scheme='AMAZON']", amazon => book.SetProviderId("Amazon", amazon));
             ReadStringInto("//dc:identifier[@opf:scheme='GOOGLE']", google => book.SetProviderId("GoogleBooks", google));
+#pragma warning disable CA1307 // Specify StringComparison for clarity
+            ReadStringInto("//dc:identifier[@opf:scheme='COMICVINE']", comicvine => book.SetProviderId("ComicVine", $"{book.SeriesName?.Replace(" ", "-")}/4000-{comicvine}"));
+#pragma warning restore CA1307 // Specify StringComparison for clarity
 
             ReadStringInto("//dc:date", date =>
             {
@@ -351,20 +448,6 @@ namespace Jellyfin.Plugin.Calibre.Providers
                 if (!string.IsNullOrEmpty(column))
                 {
                     AddCustomRating(column, book);
-                }
-            }
-
-            var seriesNameNode = _document.SelectSingleNode("//opf:meta[@name='calibre:series']", _namespaceManager);
-            var seriesIndexNode = _document.SelectSingleNode("//opf:meta[@name='calibre:series_index']", _namespaceManager);
-            if (!string.IsNullOrEmpty(seriesNameNode?.Attributes?["content"]?.Value))
-            {
-                try
-                {
-                    book.SeriesName = seriesNameNode.Attributes["content"]?.Value;
-                }
-                catch (Exception)
-                {
-                    _logger.LogError("Error parsing Calibre series name");
                 }
             }
 

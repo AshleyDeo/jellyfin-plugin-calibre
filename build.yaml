@@ -1,7 +1,7 @@
 ---
 name: "Calibre"
 guid: "7808f7b3-1de5-41d3-be53-afbf28c99fff"
-version: "1.0.0.0"
+version: "2.0.0.0"
 targetAbi: "10.9.0.0"
 framework: "net8.0"
 overview: "Calibre metadata provider"
@@ -12,4 +12,6 @@ owner: "ashleydeo"
 artifacts:
 - "Jellyfin.Plugin.Calibre.dll"
 changelog: >
-  - Initial release
+  - Add people/roles to metadata columns
+  - Reads Comic Vine id
+  - Cleaned up configuration page
