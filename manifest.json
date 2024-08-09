@@ -17,7 +17,7 @@
             },
             {
                 "version": "2.0.0.0",
-                "changelog": "- Add people/roles to metadata columns - Reads Comic Vine id - Cleaned up configuration page\n",
+                "changelog": "- Add people/roles to metadata columns\n- Reads Comic Vine id\n- Cleaned up configuration page\n",
                 "targetAbi": "10.9.0.0",
                 "sourceUrl": "https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases/download/v2/calibre_2.0.0.0.zip",
                 "checksum": "6d0c5522cac445218604938b24327d6a",

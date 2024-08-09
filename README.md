@@ -1,11 +1,12 @@
 # jellyfin-plugin-calibre
+[![GitHub release](https://img.shields.io/github/release/AshleyDeo/jellyfin-plugin-calibre.svg?colorB=97CA00?label=version)](https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases/latest) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/master/LICENSE)
+
  This [Jellyfin](https://jellyfin.org/) plugin provides metadata from user's [Calibre](https://calibre-ebook.com/) library.
  <br>
  Based on the [Bookshelf plugin](https://github.com/jellyfin/jellyfin-plugin-bookshelf)
  <br>
- * Adds all authors for multi-author books
- * Adds Google Books provider id
  * Adds metadata from Calibre custom columns
+ * Adds Google Books, ComicVine, and ISBN provider id
 
 ## How to use
 
@@ -22,14 +23,14 @@
 
 ## Installation
 
-### From .zip file
-1. Download the .zip file from release page.
-2. Extract it and place the .dll file in a folder called ```plugins/Calibre``` under  the program data directory or inside the portable install directory.
-3. Restart Jellyfin.
-
 ### From Repository
 1. Add [link](https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/main/manifest.json) to Plugin Repository
 ```
 https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/main/manifest.json
 ```
 2. Install the "Calibre" plugin from the catalog
+
+### From .zip file
+1. Download the .zip file from release page.
+2. Extract it and place the .dll file in a folder called ```plugins/Calibre``` under  the program data directory or inside the portable install directory.
+3. Restart Jellyfin.
