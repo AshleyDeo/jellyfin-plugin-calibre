@@ -1,5 +1,5 @@
 # jellyfin-plugin-calibre
-[![GitHub release](https://img.shields.io/github/release/AshleyDeo/jellyfin-plugin-calibre.svg?colorB=97CA00?label=version)](https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases/latest) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/AshleyDeo/jellyfin-plugin-calibre.svg?style=flat-square&color=00a6ff)](https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases/latest) [![Github downloads](https://img.shields.io/github/downloads/AshleyDeo/jellyfin-plugin-calibre/total.svg?style=flat-square&color=50ab50)](https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-9b61ff.svg?style=flat-square&)](https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/master/LICENSE)
 
  This [Jellyfin](https://jellyfin.org/) plugin provides metadata from user's [Calibre](https://calibre-ebook.com/) library.
  <br>
@@ -10,10 +10,12 @@
 
 ## How to use
 
-1. Add user custom columns seperated by semicolon ;<br>
+1. Add the folder where your Calibre library is located to Jellyfin
+1. On **Admin Dashboard**, go to **My Plugins**. It will show your folders/libraries with dropdowns. 
+2. Add user custom columns seperated by semicolon ;<br>
  Example: `myColumn01;myColumn02;myColumn03`
-2. Save plugin configuration
-3. The library must be refreshed
+3. Save plugin configuration
+4. The library must be refreshed
 
 ### Rules
 * DO NOT use columns with code in template. It breaks the plugin.
