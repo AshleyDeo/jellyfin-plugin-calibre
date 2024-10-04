@@ -9,13 +9,14 @@
  * Adds Google Books, ComicVine, and ISBN provider id
 
 ## How to use
-
 1. Add the folder where your Calibre library is located to Jellyfin
 1. On **Admin Dashboard**, go to **My Plugins**. It will show your folders/libraries with dropdowns. 
 2. Add user custom columns seperated by semicolon ;<br>
  Example: `myColumn01;myColumn02;myColumn03`
 3. Save plugin configuration
 4. The library must be refreshed
+
+**Check the [Wiki](https://github.com/AshleyDeo/jellyfin-plugin-calibre/wiki) for more info!**
 
 ### Rules
 * DO NOT use columns with code in template. It breaks the plugin.
