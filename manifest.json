@@ -6,6 +6,7 @@
         "description": "Gets the metadata from calibre metadata.opf\n",
         "owner": "ashleydeo",
         "category": "Metadata",
+		"imageUrl": "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-calibre.png",
         "versions": [
 			{
                 "version": "2.1.0.0",
