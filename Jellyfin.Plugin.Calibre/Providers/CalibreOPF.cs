@@ -92,14 +92,16 @@ namespace Jellyfin.Plugin.Calibre.Providers
             _logger.LogDebug("Metadata File found");
             file = _fileSystem.GetFileInfo(Path.Combine(directoryPath, OpfFile));
 
-            var libPaths = directoryPath.Split('\\');
+            // Path.DirectorySeparatorChar to account for Windows and UNIX
+            var libPaths = directoryPath.Split(Path.DirectorySeparatorChar);
+            _logger.LogDebug("Directory Path: {Path}", directoryPath);
             string libPath = string.Empty;
             for (int i = 0; i < libPaths.Length - 2; i++)
             {
                 libPath += libPaths[i];
                 if (i < libPaths.Length - 3)
                 {
-                    libPath += '\\';
+                    libPath += Path.DirectorySeparatorChar;
                 }
             }
 
@@ -114,11 +116,14 @@ namespace Jellyfin.Plugin.Calibre.Providers
             var libs = _configuration.LibConfigs;
             if (libs?.Length > 0)
             {
+                _logger.LogDebug("Looking for {Path}", path);
+                _logger.LogDebug("Libraries Found: {LibNum}", libs.Length);
                 foreach (var config in libs)
                 {
+                    _logger.LogDebug("Libraries Found: {Loc}", config.Location);
                     if (config?.Location == path)
                     {
-                        // _logger.LogInformation("Library Found: {Lib}", config.Name);
+                        // _logger.LogDebug("Library Found: {Lib} at {Loc}", config.Name, config.Location);
                         _library = config;
                         break;
                     }
