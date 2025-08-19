@@ -7,6 +7,14 @@
         "owner": "ashleydeo",
         "category": "Metadata",
         "versions": [
+			{
+                "version": "2.1.0.0",
+                "changelog": "- Fixed for Unix system directories\n",
+                "targetAbi": "10.9.0.0",
+                "sourceUrl": "https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases/download/v2.1/calibre_2.1.0.0.zip",
+                "checksum": "4e5ef337c0d1ac1cd03b56f61aef8477",
+                "timestamp": "2025-08-19T21:51:01Z"
+            },
             {
                 "version": "2.0.0.0",
                 "changelog": "- Add people/roles to metadata columns\n- Reads Comic Vine id\n- Cleaned up configuration page\n",

@@ -1,4 +1,6 @@
 # jellyfin-plugin-calibre
+![Plugin Banner](https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/plugins/SVG/jellyfin-plugin-calibre.svg?sanitize=true)
+
 [![GitHub release](https://img.shields.io/github/release/AshleyDeo/jellyfin-plugin-calibre.svg?style=flat-square&color=00a6ff)](https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases/latest) [![Github downloads](https://img.shields.io/github/downloads/AshleyDeo/jellyfin-plugin-calibre/total.svg?style=flat-square&color=50ab50)](https://github.com/AshleyDeo/jellyfin-plugin-calibre/releases) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-9b61ff.svg?style=flat-square&)](https://raw.githubusercontent.com/AshleyDeo/jellyfin-plugin-calibre/master/LICENSE)
 
  This [Jellyfin](https://jellyfin.org/) plugin provides metadata from user's [Calibre](https://calibre-ebook.com/) library.
