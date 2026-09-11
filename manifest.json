@@ -5,7 +5,7 @@
         "overview": "Calibre metadata provider",
         "description": "Gets the metadata from calibre metadata.opf\n",
         "owner": "ashleydeo",
-        "category": "Metadata",
+        "category": "Books",
 		"imageUrl": "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-calibre.png",
         "versions": [
 			{

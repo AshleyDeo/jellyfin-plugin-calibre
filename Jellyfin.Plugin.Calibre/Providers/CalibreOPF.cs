@@ -94,7 +94,11 @@ namespace Jellyfin.Plugin.Calibre.Providers
 
             // Path.DirectorySeparatorChar to account for Windows and UNIX
             var libPaths = directoryPath.Split(Path.DirectorySeparatorChar);
-            _logger.LogDebug("Directory Path: {Path}", directoryPath);
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+            {
+                _logger.LogDebug("Directory Path: {Path}", directoryPath);
+            }
+
             string libPath = string.Empty;
             for (int i = 0; i < libPaths.Length - 2; i++)
             {
@@ -106,7 +110,10 @@ namespace Jellyfin.Plugin.Calibre.Providers
             }
 
             GetLibrary(libPath);
-            _logger.LogDebug("Library Found: {Name} - {Genre}", _library.Name, _library.Genres);
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+            {
+                _logger.LogDebug("Library Found: {Name} - {Genre}", _library.Name, _library.Genres);
+            }
 
             return file;
         }
@@ -116,11 +123,19 @@ namespace Jellyfin.Plugin.Calibre.Providers
             var libs = _configuration.LibConfigs;
             if (libs?.Length > 0)
             {
-                _logger.LogDebug("Looking for {Path}", path);
-                _logger.LogDebug("Libraries Found: {LibNum}", libs.Length);
+                if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+                {
+                    _logger.LogDebug("Looking for {Path}", path);
+                    _logger.LogDebug("Libraries Found: {LibNum}", libs.Length);
+                }
+
                 foreach (var config in libs)
                 {
-                    _logger.LogDebug("Libraries Found: {Loc}", config.Location);
+                    if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+                    {
+                        _logger.LogDebug("Libraries Found: {Loc}", config.Location);
+                    }
+
                     if (config?.Location == path)
                     {
                         // _logger.LogDebug("Library Found: {Lib} at {Loc}", config.Name, config.Location);

@@ -345,7 +345,11 @@ namespace Jellyfin.Plugin.Calibre.Providers
                     if (!string.IsNullOrEmpty(name))
                     {
                         var person = new PersonInfo { Name = name, Type = type };
-                        _logger.LogDebug("Added {Name} as {Type}", name, type);
+                        if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+                        {
+                            _logger.LogDebug("Added {Name} as {Type}", name, type);
+                        }
+
                         book.AddPerson(person);
                     }
                 }
@@ -530,7 +534,10 @@ namespace Jellyfin.Plugin.Calibre.Providers
         {
             var communityRating = FindUserMetadata(colName);
             book.OfficialRating = (communityRating.Count > 0) ? communityRating[0] : "Unrated";
-            _logger.LogDebug("Rating Found: {CommunityRating}", communityRating.Count);
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+            {
+                _logger.LogDebug("Rating Found: {CommunityRating}", communityRating.Count);
+            }
         }
 
         /// <summary>
@@ -540,7 +547,10 @@ namespace Jellyfin.Plugin.Calibre.Providers
         {
             var parentalRating = FindUserMetadata(colName);
             book.OfficialRating = (parentalRating.Count > 0) ? parentalRating[0] : "Unrated";
-            _logger.LogDebug("Rating Found: {ParentalRating}", parentalRating.Count);
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+            {
+                _logger.LogDebug("Rating Found: {ParentalRating}", parentalRating.Count);
+            }
         }
 
         /// <summary>
@@ -550,7 +560,10 @@ namespace Jellyfin.Plugin.Calibre.Providers
         {
             var customRating = FindUserMetadata(colName);
             book.OfficialRating = (customRating.Count > 0) ? customRating[0] : "Unrated";
-            _logger.LogDebug("Rating Found: {CustomRating}", customRating.Count);
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+            {
+                _logger.LogDebug("Rating Found: {CustomRating}", customRating.Count);
+            }
         }
 
         private string FindMainTitle()
@@ -619,7 +632,10 @@ namespace Jellyfin.Plugin.Calibre.Providers
             resultValue = resultValue?.Replace("\"", string.Empty);
 #pragma warning restore CA1307 // Specify StringComparison for clarity
 
-            _logger.LogDebug("#{ColName} Content: {ResultValue}", colName, resultValue);
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+            {
+                _logger.LogDebug("#{ColName} Content: {ResultValue}", colName, resultValue);
+            }
 
             List<string> result = new List<string>();
             Regex regexPat = new Regex(pattern);
@@ -663,7 +679,10 @@ namespace Jellyfin.Plugin.Calibre.Providers
                 _logger.LogDebug("Content String was empty");
             }
 
-            _logger.LogDebug("#{ColName} List: {Result}", colName, result);
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+            {
+                _logger.LogDebug("#{ColName} List: {Result}", colName, result);
+            }
 
             return result;
         }
